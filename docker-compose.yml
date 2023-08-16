@@ -1,0 +1,31 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: my-emailapi-app
+    container_name: my-emailapi-app 
+    command: php artisan serve --host=0.0.0.0 --port=9091
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "9091:9091"
+    depends_on:
+      - db
+
+
+  db:
+    image: mysql:latest
+    container_name: my-emailapi-db
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: emailapi
+      MYSQL_PASSWORD: password
+    ports:
+      - "3301:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
