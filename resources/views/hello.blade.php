@@ -16,7 +16,7 @@
         </style>
     </head>
     <body class="antialiased">
-              Welcome to skillsforge Email service
+             <h4>Welcome to skillsforge Email service</h4> 
               <button><a href="{{route('composemail')}}"> GET STARTED</a></button>
     </body>
 </html>

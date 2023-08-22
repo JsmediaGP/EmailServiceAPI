@@ -29,4 +29,34 @@ class emailcontroller extends Controller
         return response()->json(['message' => 'Email sent and details saved.']);
 
     }
+    function index(){
+        return view ("email.index");
+    }
+
+    function mailsend(Request $request){
+        
+        $data = $request->validate([
+            'recipient_email' => 'required|email',
+            'content' => 'required|string',
+        ]);
+
+       
+            $recipient_email = $data['recipient_email'];
+            $content = $data['content'];
+      
+        Mail::to($recipient_email)->send(new myMail($content));
+        
+        $emailrecord = new Email([
+            'recipient_email' => $recipient_email,
+            'content' => $content,
+            'time_sent' => now(),
+        ]);
+        $emailrecord->save();
+        session()->flash('success', 'Email sent successfully!');
+
+        return redirect()->route('composemail');
+    
+    //return response()->json(['message' => 'Email sent and details saved.']);
+
+}
 }
