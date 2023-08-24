@@ -7,28 +7,73 @@ use App\Models\Email;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
+
 
 class emailcontroller extends Controller
 {
     function sendmail(Request $request){
         
-        
-            $recipient_email = $request->input('recipient_email');
-            $content = $request->input('content');
-
-            Mail::to($recipient_email)->send(new myMail($content));
-            
-            $emailrecord = new Email([
-                'recipient_email' => $recipient_email,
-                'content' => $content,
-                'time_sent' => now(),
+         $validatedData = Validator::make($request->all(), [
+            'recipient_email' => 'required',
+            'content' => 'required',
+        ]);
+        if($validatedData->fails()){
+            return response()->json([
+                'status'=>"Error",
+                'message'=> $validatedData->messages()
             ]);
-            $emailrecord->save();
+        }else{
+            $validatedData = $validatedData->validated();
+           
+
+            $recipientEmails = explode(',', $validatedData['recipient_email']);
+            $messageBody = $validatedData['content'];
+
+            foreach ($recipientEmails as $recipient) {
+                $recipient = trim($recipient);
+                
+                
+                Mail::to($recipient)->send(new myMail($messageBody));
+            
+                
+                $emailrecord = new Email([
+                    'recipient_email' => $recipient,
+                    'content' => $messageBody,
+                    'time_sent' => now(),
+                ]);
+                $emailrecord->save();
+            }
+            return response()->json(['message' => 'Email sent and details saved.']);
+
+        }
+        
+        
+        
+        //=======================================================================================
+        
+        // $recipient_email = $request->input('recipient_email');
+        // $content = $request->input('content');
+        
+       
+        //     Mail::to($recipient_email)->send(new myMail($content));
+            
+        //     $emailrecord = new Email([
+        //         'recipient_email' => $recipient_email,
+        //         'content' => $content,
+        //         'time_sent' => now(),
+        //     ]);
+        //     $emailrecord->save();
     
     
-        return response()->json(['message' => 'Email sent and details saved.']);
+        // return response()->json([
+        //     'stratus'=> "Success",
+        //     'message' => 'Email sent and details saved.'
+        //     ]);
 
     }
+    
+    
     function index(){
         return view ("email.index");
     }
