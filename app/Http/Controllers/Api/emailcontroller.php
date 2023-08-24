@@ -50,30 +50,11 @@ class emailcontroller extends Controller
         
         
         
-        //=======================================================================================
-        
-        // $recipient_email = $request->input('recipient_email');
-        // $content = $request->input('content');
-        
-       
-        //     Mail::to($recipient_email)->send(new myMail($content));
-            
-        //     $emailrecord = new Email([
-        //         'recipient_email' => $recipient_email,
-        //         'content' => $content,
-        //         'time_sent' => now(),
-        //     ]);
-        //     $emailrecord->save();
-    
-    
-        // return response()->json([
-        //     'stratus'=> "Success",
-        //     'message' => 'Email sent and details saved.'
-        //     ]);
+     
 
     }
     
-    
+    //for the Interface
     function index(){
         return view ("email.index");
     }
@@ -101,7 +82,7 @@ class emailcontroller extends Controller
 
         return redirect()->route('composemail');
     
-    //return response()->json(['message' => 'Email sent and details saved.']);
+   
 
 }
 }
